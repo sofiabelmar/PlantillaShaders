@@ -16,4 +16,7 @@ void main() {
 	//Posicion del vertice (vec4)
 	gl_Position.xyz = posicion;
 	gl_Poition.w = 1.0;
+
+	//Establecer valores de atributos de salida
+	fragmentColor = color;
 }

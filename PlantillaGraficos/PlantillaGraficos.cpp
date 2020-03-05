@@ -13,99 +13,44 @@
 
 #include <iostream>
 
+#include "Shader.h"
+#include "Vertice.h"
+#include <vector>
+
+
 using namespace std;
 
-void dibujarPoligono() {
-	glBegin(GL_POLYGON);
-	glColor3f(0.4f, 0.4f, 0.9f);
+//Cada elemento que querramos renderear necesita un vertex array y un buffer
+vector<Vertice> triangulo;
+GLuint vertexArrayTrianguloID;
+GLuint bufferTrianguloID;
 
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.5f, 0.0f);
-	glVertex3f(0.2f, 0.3f, 0.0f);
-	glVertex3f(0.6f, -0.4f, 0.0f);
-	glVertex3f(0.4f, -0.6f, 0.0f);
-	glEnd();
-}
+//instancia de shader
+Shader *shader;
+//identificadoeres para mapeo de atributos de entrada del vertex shader
+GLuint posicionID;
+GLuint colorID;
 
-void dibujarCirculo() {
-	glBegin(GL_POLYGON);
-	glColor3f(0.53f, 0.59f, 0.7f);
-	for (double i = 0; i < 360.0; i += 5.0) {
-		glVertex3f(
-			(0.5 * cos(i * 3.14159 / 180.0)) - 0.6, 
-			(0.1 * sin(i * 3.14159 / 180.0)) + 0.4
-			, 0.0f);
-	}
-	glEnd();
-}
-
-void dibujarTrianguloContinuo() {
-	glBegin(GL_TRIANGLE_STRIP);
-
-	glColor3f(1.0f, 1.0f, 1.0f);
-
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.1f, 0.1f, 0.0f);
-	glVertex3f(0.2f, 0.0f, 0.0f);
-
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(0.2f, 0.15f, 0.0f);
-
-	glEnd();
-}
-
-void dibujarLineaContinua() {
-	glBegin(GL_LINE_STRIP);
-
-	glColor3f(0.1f, 0.3f, 0.75f);
-
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.2f, 0.0f);
-	glVertex3f(0.4f, 0.2f, 0.0f);
-	glVertex3f(0.2f, 0.3f, 0.0f);
-
-	glEnd();
-}
-
-void dibujarLineas() {
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 0.4f, 0.6f);
-
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.2f, -0.4f, 0.0f);
-	
-	glVertex3f(-0.3f, 0.1f, 0.0f);
-	glVertex3f(-0.3f, -0.4f, 0.0f);
-
-	glEnd();
-}
-
-void dibujarTriangulos() {
-	//Establecemos el tipo de primitiva
-	glBegin(GL_TRIANGLES);
-	//Establecemos color
-	glColor3f(1.0f, 0.0f, 0.0f);
-	//Enviar vertices
-	glVertex3f(-0.7f, 0.7f, 0.0f);
-	glVertex3f(-0.7f, -0.7f, 0.0f);
-	glVertex3f(0.7f, -0.7f, 0.0f);
-
-	glVertex3f(0.7f, 0.7f, 0.0f);
-	glVertex3f(0.7f, -0.7f, 0.0f);
-	glVertex3f(-0.7f, 0.7f, 0.0f);
-
-	//Especificar que dejaremos de dibujar
-	glEnd();
+void InicializarTriangulo() {
+	Vertice v1 = {
+		vec3(0.0f,0.3f,0.0f),
+		vec4(0.3f,0.1f,0.0f,1.0f)
+	};
+	Vertice v2 = {
+		vec3(-0.3f,-0.3f,0.0f),
+		vec4(0.3f,0.1f,0.0f,1.0f)
+	};
+	Vertice v3 = {
+		vec3(0.3f,-0.3f,0.0f),
+		vec4(0.8f,0.1f,0.0f,1.0f)
+	};
+	triangulo.push_back(v1);
+	triangulo.push_back(v2);
+	triangulo.push_back(v3);
 }
 
 void dibujar() {
-	dibujarPoligono();
-	dibujarLineaContinua();
-	dibujarLineas();
-	dibujarCirculo();
-	//dibujarNubes();
-	//dibujarCielo();
-	//dibujarVentana();
+	
 }
 
 int main()
@@ -145,6 +90,11 @@ int main()
 		glGetString(GL_VERSION);
 	cout << "Version OpenGL: " << versionGL;
 
+	InicializarTriangulo();
+
+	const char* rutaVertexShader = "VertexShader.shader";
+		const char* rutaFragmentShader = "FragmentShader.shader";
+	shader = new Shader(rutaVertexShader,rutaFragmentShader);
 
 	//Ciclo de dibujo (Draw loop)
 	while (!glfwWindowShouldClose(window)) {
