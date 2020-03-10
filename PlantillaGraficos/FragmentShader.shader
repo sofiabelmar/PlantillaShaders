@@ -11,4 +11,4 @@ out vec4 salidaColor;
 
 void main() {
 	salidaColor = fragmentColor;
-}
+}	

@@ -22,7 +22,7 @@ public:
 		const char* rutaFragmentShader);
 	GLuint getID();
 	void enlazar();
-	void desenlazar();
+	void desenlazar();	
 private:
 	GLuint shaderID;
 	void verificarCompilacion(GLuint id);
